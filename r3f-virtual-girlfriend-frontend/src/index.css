@@ -14,8 +14,12 @@
 
 body {
   margin: 0;
-  background-color: #faaca8;
-  background-image: linear-gradient(19deg, #faaca8 0%, #ddd6f3 100%);
+  /* replace gradient with your hospital image: */
+  background-image: url("/images/hospital-bg.jpg");
+  background-size: cover;
+  background-position: center;
+  /* optional: dark overlay for readability */
+  position: relative;
 }
 
 body.greenScreen {
