@@ -15,7 +15,7 @@ app.get('/', (req, res) => {
 
 // Chat page
 app.get('/chat', (req, res) => {
-  res.sendFile(path.join(__dirname, '../chatgpt-simulation.html'));
+  res.sendFile(path.join(__dirname, '../chat.html'));
 });
 
 // Assistant static build
