@@ -22,6 +22,41 @@ body {
     color: var(--text-color);
 }
 
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.home-buttons {
+    display: flex;
+    gap: 20px;
+}
+
+.home-button {
+    padding: 15px 25px;
+    background-color: var(--secondary-color);
+    color: white;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a {
+    margin-left: 15px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
 .main-container {
     max-width: 100%;
     min-height: 100vh;
