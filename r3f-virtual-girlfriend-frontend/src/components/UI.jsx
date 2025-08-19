@@ -19,7 +19,7 @@ export const UI = ({ hidden, ...props }) => {
   return (
     <>
       <div className="fixed top-0 left-0 right-0 bottom-0 z-10 flex justify-between p-4 flex-col pointer-events-none">
-      <div className="self-start backdrop-blur-md bg-white bg-opacity-50 p-4 rounded-lg flex items-center gap-2">
+      <div className="self-start pointer-events-auto backdrop-blur-md bg-white bg-opacity-50 p-4 rounded-lg flex items-center gap-2">
           <img
             src="images/logo-chaptal.png"
             alt="Fondation Léonie Chaptal"
@@ -29,8 +29,8 @@ export const UI = ({ hidden, ...props }) => {
             Fondation Léonie Chaptal
           </span>
           <nav className="ml-4 flex gap-2">
-            <a href="/" className="px-2 py-1 bg-chaptal-green text-white rounded">Accueil</a>
-            <a href="/chat" className="px-2 py-1 bg-chaptal-green text-white rounded">Chat</a>
+            <a href="/index.html" className="px-2 py-1 bg-chaptal-green text-white rounded">Accueil</a>
+            <a href="/chat.html" className="px-2 py-1 bg-chaptal-green text-white rounded">Chat</a>
           </nav>
         </div>
         <div className="w-full flex flex-col items-end justify-center gap-4">
