@@ -29,8 +29,8 @@ export const UI = ({ hidden, ...props }) => {
             Fondation Léonie Chaptal
           </span>
           <nav className="ml-4 flex gap-2">
-            <a href="/" className="px-2 py-1 bg-chaptal-green text-white rounded">Accueil</a>
-            <a href="/chat" className="px-2 py-1 bg-chaptal-green text-white rounded">Chat</a>
+            <a href="/index.html" className="px-2 py-1 bg-chaptal-green text-white rounded">Accueil</a>
+            <a href="/chat.html" className="px-2 py-1 bg-chaptal-green text-white rounded">Chat</a>
           </nav>
         </div>
         <div className="w-full flex flex-col items-end justify-center gap-4">
