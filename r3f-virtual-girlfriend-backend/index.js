@@ -5,7 +5,12 @@ import voice from "elevenlabs-node";
 import express from "express";
 import { promises as fs } from "fs";
 import OpenAI from "openai";
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const testMessages = [
   {
@@ -35,11 +40,29 @@ const voiceID = "TojRWZatQyy9dujEdiQ1";
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.static(path.join(__dirname, "..")));
 const port = 3000;
 
+// Serve home and chat pages
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.sendFile(path.join(__dirname, "../index.html"));
 });
+
+app.get("/chat", (req, res) => {
+  res.sendFile(path.join(__dirname, "../chat.html"));
+});
+
+// Serve assistant frontend build
+app.use(
+  "/assistant",
+  express.static(
+    path.join(
+      __dirname,
+      "../r3f-virtual-girlfriend-frontend/dist"
+    ),
+    { index: "index.html" }
+  )
+);
 
 app.get("/voices", async (req, res) => {
   // res.send(await voice.getVoices(elevenLabsApiKey));
