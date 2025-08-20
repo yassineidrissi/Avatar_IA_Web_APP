@@ -1,12 +1,11 @@
 {
-  "name": "chat_front",
+  "name": "chat-scenario-frontend",
   "version": "1.0.0",
-  "description": "Frontend for chat scenario platform",
+  "description": "Frontend for Chat Scenario Platform",
   "scripts": {
-    "start": "serve -l 8080",
-    "test": "echo \"No tests specified\" && exit 0"
+    "start": "http-server -p 8080"
   },
   "dependencies": {
-    "serve": "^10.0.2"
+    "http-server": "^14.1.1"
   }
 }

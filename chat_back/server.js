@@ -1,94 +1,136 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import OpenAI from 'openai';
+const express = require('express');
+const cors = require('cors');
+const dotenv = require('dotenv');
+const OpenAI = require('openai');
+const { calculateScore } = require('./utils/scoring');
 
-// Load environment variables from .env
+// Load environment variables
 dotenv.config();
 
-// Initialize OpenAI client with API key
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-
+// Initialize Express app
 const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Initialize OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Helper function to send a chat completion request to OpenAI
-async function getChatCompletion(prompt) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages: [{ role: 'user', content: prompt }]
-  });
-  return completion.choices[0].message.content.trim();
-}
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 
-// Simple scoring function based on vocabulary diversity
-// score = (unique words / total words) * 100
-function scoreResponse(text) {
-  const words = text.split(/\s+/).filter(Boolean);
-  if (words.length === 0) return 0;
-  const unique = new Set(words.map(w => w.toLowerCase()));
-  return Number(((unique.size / words.length) * 100).toFixed(2));
-}
-
-// Function to optimize a prompt using OpenAI
-async function optimizePrompt(prompt) {
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages: [
-      { role: 'system', content: 'You are a prompt optimizer. Rewrite the user\'s prompt to be clearer and more specific.' },
-      { role: 'user', content: prompt }
-    ]
-  });
-  return completion.choices[0].message.content.trim();
-}
-
-// POST /api/chat - returns the assistant's reply to the prompt
+// Chat endpoint - process a user prompt and return AI response
 app.post('/api/chat', async (req, res) => {
   try {
     const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: 'Prompt is required.' });
-
-    const reply = await getChatCompletion(prompt);
-    const score = scoreResponse(reply);
-    res.json({ prompt, reply, score });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to process chat request.' });
+    
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt is required' });
+    }
+    
+    const response = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        { role: "system", content: "You are a helpful medical assistant providing information about diagnoses and medical conditions." },
+        { role: "user", content: prompt }
+      ],
+      temperature: 0.7,
+      max_tokens: 500
+    });
+    
+    const aiResponse = response.choices[0].message.content;
+    const score = calculateScore(prompt, aiResponse);
+    
+    res.json({
+      prompt,
+      response: aiResponse,
+      score
+    });
+    
+  } catch (error) {
+    console.error('Error in /api/chat:', error);
+    res.status(500).json({ error: error.message || 'Failed to process chat request' });
   }
 });
 
-// POST /api/best_prompt - returns optimized prompt and comparison of responses
+// Best prompt endpoint - optimize the prompt and compare responses
 app.post('/api/best_prompt', async (req, res) => {
   try {
     const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ error: 'Prompt is required.' });
-
-    const optimizedPrompt = await optimizePrompt(prompt);
-    const [originalResponse, optimizedResponse] = await Promise.all([
-      getChatCompletion(prompt),
-      getChatCompletion(optimizedPrompt)
-    ]);
-
-    const originalScore = scoreResponse(originalResponse);
-    const optimizedScore = scoreResponse(optimizedResponse);
-
-    res.json({
-      originalPrompt: prompt,
-      optimizedPrompt,
-      originalResponse,
-      optimizedResponse,
-      originalScore,
-      optimizedScore
+    
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt is required' });
+    }
+    
+    // Step 1: Generate an optimized version of the prompt
+    const optimizationResponse = await openai.chat.completions.create({
+      model: "gpt-4",
+      messages: [
+        { role: "system", content: "You are a prompt optimization expert. Rewrite the given medical prompt to be more specific, clear, and effective. Focus on adding context, specificity, and proper framing. Return ONLY the optimized prompt, nothing else." },
+        { role: "user", content: `Original prompt: "${prompt}"` }
+      ],
+      temperature: 0.7,
+      max_tokens: 300
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to process best_prompt request.' });
+    
+    const optimizedPrompt = optimizationResponse.choices[0].message.content;
+    
+    // Step 2: Get responses for both prompts
+    const [originalResponse, optimizedResponse] = await Promise.all([
+      openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          { role: "system", content: "You are a helpful medical assistant providing information about diagnoses and medical conditions." },
+          { role: "user", content: prompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      }),
+      openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          { role: "system", content: "You are a helpful medical assistant providing information about diagnoses and medical conditions." },
+          { role: "user", content: optimizedPrompt }
+        ],
+        temperature: 0.7,
+        max_tokens: 500
+      })
+    ]);
+    
+    // Step 3: Calculate scores for both responses
+    const originalText = originalResponse.choices[0].message.content;
+    const optimizedText = optimizedResponse.choices[0].message.content;
+    
+    const originalScore = calculateScore(prompt, originalText);
+    const optimizedScore = calculateScore(optimizedPrompt, optimizedText);
+    
+    // Step 4: Return comparison results
+    res.json({
+      original: {
+        prompt,
+        response: originalText,
+        score: originalScore
+      },
+      optimized: {
+        prompt: optimizedPrompt,
+        response: optimizedText,
+        score: optimizedScore
+      }
+    });
+    
+  } catch (error) {
+    console.error('Error in /api/best_prompt:', error);
+    res.status(500).json({ error: error.message || 'Failed to process best prompt request' });
   }
 });
 
-// Start the Express server
-const PORT = process.env.PORT || 3000;
+// Start the server
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
