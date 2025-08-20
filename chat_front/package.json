@@ -1,0 +1,12 @@
+{
+  "name": "chat_front",
+  "version": "1.0.0",
+  "description": "Frontend for chat scenario platform",
+  "scripts": {
+    "start": "serve -l 8080",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "dependencies": {
+    "serve": "^14.2.0"
+  }
+}

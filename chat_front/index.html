@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Scenario Platform</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 2rem; }
+    input { width: 70%; padding: 0.5rem; }
+    button { padding: 0.5rem 1rem; }
+    .section { margin-top: 1.5rem; border-top: 1px solid #ccc; padding-top: 1rem; }
+    .prompt { font-style: italic; color: #555; }
+  </style>
+</head>
+<body>
+  <h1>Chat Scenario Platform</h1>
+  <input id="prompt" placeholder="Enter your prompt" />
+  <button id="sendBtn">Send</button>
+  <div id="error" style="color:red;"></div>
+
+  <div class="section" id="originalSection">
+    <h2>Original Prompt Response</h2>
+    <p id="originalResponse"></p>
+    <p>Score: <span id="originalScore"></span></p>
+  </div>
+
+  <div class="section" id="optimizedSection">
+    <h2>Optimized Prompt Response</h2>
+    <p>Optimized Prompt: <span class="prompt" id="optimizedPrompt"></span></p>
+    <p id="optimizedResponse"></p>
+    <p>Score: <span id="optimizedScore"></span></p>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
