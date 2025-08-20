@@ -7,6 +7,6 @@
     "test": "echo \"No tests specified\" && exit 0"
   },
   "dependencies": {
-    "serve": "^14.2.0"
+    "serve": "^10.0.2"
   }
 }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plateforme P-2 : Feedback Réflexif</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <div class="logo-container">
+                <img src="logo.png" alt="Logo" class="logo">
+                <span class="foundation-name">Fondation Léonie Chaptal</span>
+            </div>
+            <h1>Plateforme P-2 : Atelier de Feedback Réflexif</h1>
+            <nav class="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="/assistant">Assistant</a>
+            </nav>
+        </header>
+
+        <div class="scenario-banner">
+            <p><strong>Contexte :</strong> Qu'est-ce que tu peux connaître à propos du diagnostic de maladie</p>
+        </div>
+
+        <main class="chat-container">
+            <div class="split-panel">
+                <!-- Left Panel - Actual Prompt -->
+                <div class="panel actual-prompt-panel">
+                    <h2 class="panel-title">Prompt Actuel</h2>
+                    <div class="chat-window">
+                        <div class="chat-message user">
+                            <div class="message-header">Prompt initial</div>
+                            <div class="message-content">"Le patient a de la fièvre."</div>
+                            <div class="score score-low">Score Qualité : 0.62</div>
+                        </div>
+                        
+                        <div class="chat-message ai">
+                            <div class="message-header">Réponse générée</div>
+                            <div class="message-content">"La fièvre peut être causée par de nombreuses pathologies, allant d'infections virales bénignes à des conditions plus sérieuses. Sans informations complémentaires comme la durée, l'intensité de la fièvre ou d'autres symptômes associés, il est difficile d'établir un diagnostic précis. Je recommanderais de surveiller la température, de vérifier la présence d'autres symptômes et de consulter si la fièvre persiste plus de trois jours ou dépasse 39°C."</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Right Panel - Best Prompt -->
+                <div class="panel best-prompt-panel">
+                    <h2 class="panel-title">Prompt Optimisé</h2>
+                    <div class="chat-window">
+                        <div class="chat-message reference">
+                            <div class="message-header">Référence optimisée</div>
+                            <div class="message-content">
+                                <p><strong>Prompt optimisé :</strong> "Bonjour M. Martin, nous avons reçu les résultats. J'aimerais prendre le temps d'en discuter avec vous. Comment vous sentez-vous depuis notre dernière rencontre ?"</p>
+                                <p><strong>Réponse de référence :</strong> "Bonjour Docteur. Pour être honnête, je suis assez nerveux. J'espère que ce n'est pas trop grave. Qu'est-ce que ces résultats disent ?"</p>
+                            </div>
+                            <div class="score score-high">Score Qualité : 0.91</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="input-container">
+                <textarea id="user-input" placeholder="Tapez un message ou utilisez..."></textarea>
+                <button class="send-button">SEND</button>
+                <button class="voice-button">Parlez</button>
+            </div>
+            <div class="tools">
+                <button class="tool-button search-button"></button>
+                <button class="tool-button camera-button"></button>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
